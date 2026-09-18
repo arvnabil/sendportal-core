@@ -100,7 +100,7 @@ class MailgunWebhooksTest extends TestCase
         // given
         $message = $this->createMessage();
 
-        self::assertNull($message->unsubscribed_at);
+        self::assertNull($message->complained_at);
 
         $webhook = $this->resolveWebhook('complained', $message->message_id);
 
@@ -110,7 +110,7 @@ class MailgunWebhooksTest extends TestCase
         // then
         $response->assertOk();
 
-        self::assertNotNull($message->refresh()->unsubscribed_at);
+        self::assertNotNull($message->refresh()->complained_at);
     }
 
     /** @test */

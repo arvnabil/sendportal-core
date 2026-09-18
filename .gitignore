@@ -8,3 +8,5 @@ build/
 node_modules/
 phpunit.xml
 .phpunit.cache
+.env
+compose.yaml

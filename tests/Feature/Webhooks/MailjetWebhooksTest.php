@@ -127,7 +127,7 @@ class MailjetWebhooksTest extends TestCase
         $this->json('POST', route($this->route), $webhook);
 
         // then
-        self::assertEquals('2015-05-05 07:49:55', $message->refresh()->unsubscribed_at->toDateTimeString());
+        self::assertEquals('2015-05-05 07:49:55', $message->refresh()->complained_at->toDateTimeString());
     }
 
     /** @test */
@@ -255,7 +255,7 @@ class MailjetWebhooksTest extends TestCase
         $subscriber = $subscriber->refresh();
 
         // then
-        self::assertEquals('2015-06-03 12:35:41', $message->refresh()->unsubscribed_at);
+        self::assertEquals('2015-06-03 12:35:41', $message->refresh()->complained_at);
 
         self::assertNotNull($subscriber->unsubscribed_at);
         self::assertEquals(UnsubscribeEventType::COMPLAINT, $subscriber->unsubscribe_event_id);

@@ -35,6 +35,9 @@ class SubscriberRequest extends FormRequest
                 'nullable',
                 'array',
             ],
+            'tags.*' => [
+                Rule::exists('sendportal_tags', 'id')->where('workspace_id', Sendportal::currentWorkspaceId()),
+            ],
         ];
     }
 }

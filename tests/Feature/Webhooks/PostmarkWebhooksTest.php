@@ -104,7 +104,7 @@ class PostmarkWebhooksTest extends TestCase
         $this->json('POST', route($this->route), $webhook);
 
         // then
-        self::assertNotNull($message->refresh()->unsubscribed_at);
+        self::assertNotNull($message->refresh()->complained_at);
     }
 
     /** @test */

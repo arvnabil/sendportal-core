@@ -116,7 +116,7 @@ class EmailWebhookService
         }
 
         if (! $message->complained_at) {
-            $message->unsubscribed_at = $timestamp;
+            $message->complained_at = $timestamp;
             $message->save();
         }
 

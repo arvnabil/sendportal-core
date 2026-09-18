@@ -80,7 +80,7 @@ class SendgridWebhooksTest extends TestCase
         // given
         $message = $this->createMessage();
 
-        self::assertNull($message->unsubscribed_at);
+        self::assertNull($message->complained_at);
 
         $webhook = $this->resolveWebhook('spamreport', $message->message_id);
 
@@ -88,7 +88,7 @@ class SendgridWebhooksTest extends TestCase
         $this->json('POST', route($this->route), $webhook);
 
         // then
-        self::assertNotNull($message->refresh()->unsubscribed_at);
+        self::assertNotNull($message->refresh()->complained_at);
     }
 
     /** @test */
@@ -197,7 +197,7 @@ class SendgridWebhooksTest extends TestCase
         $this->json('POST', route($this->route), $webhook);
 
         // then
-        self::assertNotNull($message->refresh()->unsubscribed_at);
+        self::assertNotNull($message->refresh()->complained_at);
     }
 
     protected function createMessage(): Message

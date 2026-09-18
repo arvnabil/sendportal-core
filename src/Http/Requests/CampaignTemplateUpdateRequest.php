@@ -3,6 +3,8 @@
 namespace Sendportal\Base\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Sendportal\Base\Facades\Sendportal;
 
 class CampaignTemplateUpdateRequest extends FormRequest
 {
@@ -24,7 +26,10 @@ class CampaignTemplateUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'template_id' => ['required', 'exists:sendportal_templates,id'],
+            'template_id' => [
+                'required',
+                Rule::exists('sendportal_templates', 'id')->where('workspace_id', Sendportal::currentWorkspaceId()),
+            ],
         ];
     }
 }

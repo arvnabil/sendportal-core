@@ -86,7 +86,7 @@ class AwsWebhooksTest extends TestCase
         // given
         $message = $this->createMessage();
 
-        self::assertNull($message->unsubscribed_at);
+        self::assertNull($message->complained_at);
 
         $webhook = $this->resolveWebhook('complaint', $message->message_id);
 
@@ -96,7 +96,7 @@ class AwsWebhooksTest extends TestCase
         // then
         $response->assertOk();
 
-        self::assertNotNull($message->refresh()->unsubscribed_at);
+        self::assertNotNull($message->refresh()->complained_at);
     }
 
     /** @test */

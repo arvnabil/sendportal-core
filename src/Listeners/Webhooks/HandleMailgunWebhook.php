@@ -14,7 +14,6 @@ use Sendportal\Base\Events\Webhooks\MailgunWebhookReceived;
 use Sendportal\Base\Models\EmailService;
 use Sendportal\Base\Models\Message;
 use Sendportal\Base\Services\Webhooks\EmailWebhookService;
-use Sendportal\Base\Services\Webhooks\Mailgun\WebhookVerifier;
 
 class HandleMailgunWebhook implements ShouldQueue
 {
@@ -24,15 +23,10 @@ class HandleMailgunWebhook implements ShouldQueue
     /** @var EmailWebhookService */
     private $emailWebhookService;
 
-    /** @var WebhookVerifier */
-    private $verifier;
-
     public function __construct(
-        EmailWebhookService $emailWebhookService,
-        WebhookVerifier $verifier
+        EmailWebhookService $emailWebhookService
     ) {
         $this->emailWebhookService = $emailWebhookService;
-        $this->verifier = $verifier;
     }
 
     /**
@@ -44,10 +38,7 @@ class HandleMailgunWebhook implements ShouldQueue
         $messageId = $this->extractMessageId($event->payload);
         $eventName = $this->extractEventName($event->payload);
 
-        if (! $this->checkWebhookValidity($messageId, $event->payload)) {
-            Log::error('Mailgun webhook failed verification check.', ['payload' => $event->payload]);
-            return;
-        }
+
 
         Log::info('Processing Mailgun webhook.', ['type' => $eventName, 'message_id' => $messageId]);
 
@@ -166,34 +157,5 @@ class HandleMailgunWebhook implements ShouldQueue
         return '';
     }
 
-    /**
-     * Validate that the webhook came from Mailgun.
-     */
-    private function checkWebhookValidity(string $messageId, array $payload): bool
-    {
-        $message = Message::with('source.email_service')->where('message_id', $messageId)->first();
 
-        /** @var EmailService|null $emailservice */
-        $emailservice = $message->source->email_service ?? null;
-
-        if (! $emailservice) {
-            return false;
-        }
-
-        /** @var string|null $signingKey */
-        $signingKey = $emailservice->settings['webhook_key'] ?? null;
-
-        if (! $signingKey) {
-            return false;
-        }
-
-        $signature = $payload['signature'];
-
-        return $this->verifier->verify(
-            $signingKey,
-            $signature['token'],
-            (int)$signature['timestamp'],
-            $signature['signature']
-        );
-    }
 }
